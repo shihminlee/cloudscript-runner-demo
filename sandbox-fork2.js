@@ -33,6 +33,8 @@ const someService = (() => {
   }
 })();
 
+console.log(111111222222233333334444444);
+
 cluster.on( "online", function(worker) {
   worker.send({type: 'start'})
 
