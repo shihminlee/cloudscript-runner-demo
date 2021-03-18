@@ -1,5 +1,5 @@
 import java.io.*;
-import org.mozilla.javascript.Context;
+import org.mozilla.javascript.*;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.tools.shell.Global;
@@ -33,6 +33,14 @@ public class Rh {
         try {
             // Global global = new Global(cx);
             Context cx = Context.enter();
+            A a = new A();
+            a.hello();
+            a.hello();
+            a.hello();
+            a.hello();
+            Object[] functionParams = new Object[] {a};
+            cx.setOptimizationLevel(-1);
+
             // Otherclass ac = new Otherclass();
 
             Class c = cx.getClass();
@@ -45,19 +53,27 @@ public class Rh {
 
 
             Scriptable scope = cx.initStandardObjects();
-            // val wrapper = Wrapper(Map("date" -> testDate),cx, scope)
+            // // val wrapper = Wrapper(Map("date" -> testDate),cx, scope)
 
-            A cc = new A();
-            cc.hello();
-            // NativeJavaClass rType = new NativeJavaClass(scope, A);
-            // scope.put("rType", scope, rType);
+            // A cc = new A();
+            // cc.hello();
+            // // NativeJavaClass rType = new NativeJavaClass(scope, A);
+            // // scope.put("rType", scope, rType);
 
             ScriptableObject.putProperty(scope, "aaa", 123);
-            ScriptableObject.putProperty(scope, "c",  cc);
-            String[] cars = {"Volvo", "BMW", "Ford", "Mazda"};
-            ScriptableObject.putProperty(scope, "cars", cars);
-            Object ob = cx.evaluateString(scope, code, "rhinodemojs", 1, null);
-            System.out.println(Context.toObject(ob, scope));
+            // ScriptableObject.putProperty(scope, "c",  cc);
+            // String[] cars = {"Volvo", "BMW", "Ford", "Mazda"};
+            // ScriptableObject.putProperty(scope, "cars", cars);
+            // Object ob = cx.evaluateString(scope, code, "rhinodemojs", 1, null);
+            // System.out.println(Context.toObject(ob, scope));
+
+            cx.evaluateString(scope, code, "ScriptAPI", 1, null);
+            Function function = (Function) scope.get("jsFunction", scope);
+            Object jsResult = function.call(cx,scope,scope,functionParams);
+            String result = Context.toString(jsResult);
+
+            System.out.println(result);
+
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -65,7 +81,7 @@ public class Rh {
     }
 }
 
-class A {
+public class A {
     public void hello() {
         System.out.println("world");
     }
