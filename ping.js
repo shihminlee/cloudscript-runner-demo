@@ -2,7 +2,7 @@
 
 const { VM } = require('vm2');
 const delay = require('delay');
-const code = 'async () => { \n await context.helloService.slow(123, 123); const r = await context.helloService.fast(); ping(); return r; }';
+const code = 'async () => { \n const r = await context.helloService.slow(); console.log(`vm`); while (true) {}; ping(); return r; }';
 
 const helloService = (() => {
   return {
@@ -37,6 +37,10 @@ async function run() {
       clearInterval(interval)
       throw new Error('...')
     }
-  }, 1000)
+  }, 10000)
 }
 run();
+
+setInterval(() => {
+  console.log('main loop')
+}, 100)
