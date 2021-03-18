@@ -6,7 +6,7 @@ import java.util.Scanner; // Import the Scanner class to read text files
 import org.graalvm.polyglot.*;
 import org.graalvm.polyglot.proxy.*;
 
-public class Stop
+public class Graal
 {
 private static final int TIMEOUT_SEC = 1;
 public static void main( final String ... args ) throws Exception
@@ -24,28 +24,18 @@ public static void main( final String ... args ) throws Exception
     }
     String script = s.toString();
 
-    File myObj2 = new File("/Users/shih-min.lee/Desktop/stop-example/ctx.js");
-    Scanner myReader2 = new Scanner(myObj2);
-    StringBuilder s2 = new StringBuilder();
-    while (myReader2.hasNextLine()) {
-        String data = myReader2.nextLine();
-        s2.append(data);
-    }
-    String ctx = s2.toString();
-
     myReader.close();
-    myReader2.close();
 
     if ( args.length == 0 ) {
-        execWithThread( engine, script, ctx );
+        execWithThread( engine, script );
     }
     else {
-        execWithFuture( engine, script, ctx );
+        execWithFuture( engine, script );
     }
 }
 
 private static void execWithThread(
-    final ScriptEngine engine, final String script, final String contextScript )
+    final ScriptEngine engine, final String script )
 {
     final Runnable r = new Runnable() {
         public void run() {
@@ -55,22 +45,10 @@ private static void execWithThread(
 
                 jsBindings.putMember("foo", 9);
 
-
                 Value function = context.eval("js", script);
-                Value ctx = context.eval("js", contextScript);
                 int x = function.execute(jsBindings).asInt();
 
-
-
                 System.out.println(x);
-                System.out.println(x);
-                System.out.println(x);
-                System.out.println(x);
-                System.out.println(x);
-                System.out.println(x);
-                System.out.println(x);
-
-                // engine.eval( script );
             }
             catch ( Exception e ) {
                 System.out.println(
@@ -98,7 +76,7 @@ private static void execWithThread(
     }
 }
 
-private static void execWithFuture( final ScriptEngine engine, final String script, final String contextScript )
+private static void execWithFuture( final ScriptEngine engine, final String script )
     throws Exception
 {
     final Callable<Object> c = new Callable<Object>() {
