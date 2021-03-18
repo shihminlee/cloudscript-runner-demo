@@ -1,3 +1,4 @@
+import java.io.*;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
@@ -32,8 +33,9 @@ public class Rh {
         try {
             // Global global = new Global(cx);
             Context cx = Context.enter();
+            // Otherclass ac = new Otherclass();
 
-            // Class c = cx.getClass();
+            Class c = cx.getClass();
 
           //   Method[] m = c.getDeclaredMethods();
           // for(int i = 0; i < m.length; i++) {
@@ -45,12 +47,26 @@ public class Rh {
             Scriptable scope = cx.initStandardObjects();
             // val wrapper = Wrapper(Map("date" -> testDate),cx, scope)
 
+            A cc = new A();
+            cc.hello();
+            // NativeJavaClass rType = new NativeJavaClass(scope, A);
+            // scope.put("rType", scope, rType);
+
             ScriptableObject.putProperty(scope, "aaa", 123);
+            ScriptableObject.putProperty(scope, "c",  cc);
+            String[] cars = {"Volvo", "BMW", "Ford", "Mazda"};
+            ScriptableObject.putProperty(scope, "cars", cars);
             Object ob = cx.evaluateString(scope, code, "rhinodemojs", 1, null);
             System.out.println(Context.toObject(ob, scope));
         }
         catch(Exception e) {
             e.printStackTrace();
         }
+    }
+}
+
+class A {
+    public void hello() {
+        System.out.println("world");
     }
 }
