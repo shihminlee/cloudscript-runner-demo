@@ -30,59 +30,27 @@ public class Rh {
     public static void main(String[] args) {
         String code = getCode("/Users/shih-min.lee/Desktop/stop-example/scripts/for-java.js");
 
-        try {
-            // Global global = new Global(cx);
-            Context cx = Context.enter();
-            A a = new A();
-            a.hello();
-            a.hello();
-            a.hello();
-            a.hello();
-            Object[] functionParams = new Object[] {a};
-            cx.setOptimizationLevel(-1);
-
-            // Otherclass ac = new Otherclass();
-
-            Class c = cx.getClass();
-
-          //   Method[] m = c.getDeclaredMethods();
-          // for(int i = 0; i < m.length; i++) {
-          //    System.out.println("method = " + m[i].toString());
-          // }
-          // System.out.println(cx.toString());
-
-
-            Scriptable scope = cx.initStandardObjects();
-            // // val wrapper = Wrapper(Map("date" -> testDate),cx, scope)
-
-            // A cc = new A();
-            // cc.hello();
-            // // NativeJavaClass rType = new NativeJavaClass(scope, A);
-            // // scope.put("rType", scope, rType);
-
-            ScriptableObject.putProperty(scope, "aaa", 123);
-            // ScriptableObject.putProperty(scope, "c",  cc);
-            // String[] cars = {"Volvo", "BMW", "Ford", "Mazda"};
-            // ScriptableObject.putProperty(scope, "cars", cars);
-            // Object ob = cx.evaluateString(scope, code, "rhinodemojs", 1, null);
-            // System.out.println(Context.toObject(ob, scope));
-
-            cx.evaluateString(scope, code, "ScriptAPI", 1, null);
-            Function function = (Function) scope.get("jsFunction", scope);
-            Object jsResult = function.call(cx,scope,scope,functionParams);
-            String result = Context.toString(jsResult);
-
-            System.out.println(result);
-
-        }
+        Context rhino = Context.enter();
+Object[] functionParams = new Object[] {"Other parameters",new Storage()};
+rhino.setOptimizationLevel(-1);
+try
+{
+ Scriptable scope = rhino.initStandardObjects();
+ rhino.evaluateString(scope, code, "ScriptAPI", 1, null);
+ Function function = (Function) scope.get("jsFunction", scope);
+ Object jsResult = function.call(rhino,scope,scope,functionParams);
+ System.out.println(jsResult);
+}
         catch(Exception e) {
             e.printStackTrace();
         }
     }
 }
 
-public class A {
-    public void hello() {
-        System.out.println("world");
-    }
+public class Storage
+{
+ public static boolean haveFile(){
+    return true;
+ }
+ public static void readFromFile(String fname){}
 }
