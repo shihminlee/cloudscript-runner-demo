@@ -32,7 +32,9 @@ public class Rhino {
     }
 
     public static void main(String[] args) {
-        Javalin app = Javalin.create().start(7000);
+        Javalin app = Javalin.create(config -> {
+            config.asyncRequestTimeout = 1000L;
+        }).start(7000);
         app.get("/executeScript", ctx -> ctx.result(RunScript()));
     }
 
